@@ -45,7 +45,7 @@
               __FILE__, __LINE__, (msg)); \
     } while (0)
 #else
-  #define UDERR(u, m) \
+#define UDERR(u, m) \
     do { \
       (u)->error = 1; \
     } while (0)
@@ -81,7 +81,7 @@
 #  define FMT64 "ll"
 # elif defined(__amd64__) || defined(__x86_64__)
 #  define FMT64 "l"
-# else 
+# else
 #  define FMT64 "ll"
 # endif /* !x64 */
 #endif

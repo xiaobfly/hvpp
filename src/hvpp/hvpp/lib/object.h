@@ -28,33 +28,33 @@
 template <typename T>
 class object_t
 {
-  public:
+public:
     object_t() noexcept = default;
     object_t(const object_t& other) noexcept = delete;
     object_t(object_t&& other) noexcept = delete;
     object_t& operator=(const object_t& other) noexcept = delete;
     object_t& operator=(object_t&& other) noexcept = delete;
 
-    template <typename ...ARGS>
+    template <typename... ARGS>
     void initialize(ARGS&&... args) noexcept
     {
-      new (&as_object()) T(std::forward<ARGS>(args)...);
+        new(&as_object()) T(std::forward<ARGS>(args)...);
     }
 
     void destroy() noexcept
     {
-      as_object().~T();
+        as_object().~T();
     }
 
     const T* operator->() const noexcept { return &as_object(); }
-          T* operator->()       noexcept { return &as_object(); }
+    T* operator->() noexcept { return &as_object(); }
 
-    const T& operator*()  const noexcept { return as_object();  }
-          T& operator*()        noexcept { return as_object();  }
+    const T& operator*() const noexcept { return as_object(); }
+    T& operator*() noexcept { return as_object(); }
 
-  private:
-    const T& as_object()  const noexcept { return reinterpret_cast<T&>(*object_data_.data()); }
-          T& as_object()        noexcept { return reinterpret_cast<T&>(*object_data_.data()); }
+private:
+    const T& as_object() const noexcept { return reinterpret_cast<T&>(*object_data_.data()); }
+    T& as_object() noexcept { return reinterpret_cast<T&>(*object_data_.data()); }
 
     alignas(T)
     std::array<std::byte, sizeof(T)> object_data_;

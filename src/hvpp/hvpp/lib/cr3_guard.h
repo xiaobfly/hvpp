@@ -24,31 +24,39 @@
 
 namespace detail
 {
-  ia32::cr3_t kernel_cr3(ia32::cr3_t cr3) noexcept;
+    ia32::cr3_t kernel_cr3(ia32::cr3_t cr3) noexcept;
 }
 
 class cr3_guard
 {
-  public:
+public:
     cr3_guard(ia32::cr3_t new_cr3) noexcept
-      : previous_cr3_{ ia32::read<ia32::cr3_t>() }
-    { ia32::write<ia32::cr3_t>(::detail::kernel_cr3(new_cr3)); }
+        : previous_cr3_{ia32::read<ia32::cr3_t>()}
+    {
+        ia32::write<ia32::cr3_t>(::detail::kernel_cr3(new_cr3));
+    }
 
     cr3_guard(const cr3_guard& other) noexcept = delete;
 
     cr3_guard(cr3_guard&& other) noexcept
-      : previous_cr3_{ other.previous_cr3_ }
-    { other.previous_cr3_.flags = 0; }
+        : previous_cr3_{other.previous_cr3_}
+    {
+        other.previous_cr3_.flags = 0;
+    }
 
     ~cr3_guard() noexcept
-    { if (previous_cr3_.flags) ia32::write<ia32::cr3_t>(previous_cr3_); }
+    {
+        if (previous_cr3_.flags) ia32::write<ia32::cr3_t>(previous_cr3_);
+    }
 
     cr3_guard& operator=(const cr3_guard& other) noexcept = delete;
 
     cr3_guard& operator=(cr3_guard&& other) noexcept
-    { previous_cr3_ = other.previous_cr3_;
-      other.previous_cr3_.flags = 0; }
+    {
+        previous_cr3_ = other.previous_cr3_;
+        other.previous_cr3_.flags = 0;
+    }
 
-  private:
+private:
     ia32::cr3_t previous_cr3_;
 };

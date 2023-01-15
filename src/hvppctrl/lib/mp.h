@@ -3,6 +3,6 @@
 
 BOOL
 ForEachLogicalCore(
-  void (*CallbackFunction)(void*),
-  void* Context
-  );
+    void (*CallbackFunction)(void*),
+    void* Context
+);

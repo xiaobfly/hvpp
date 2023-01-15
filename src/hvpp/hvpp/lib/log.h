@@ -25,52 +25,53 @@
 
 namespace logger
 {
-  enum class level_t : uint32_t
-  {
-    trace = 0x01,
-    debug = 0x02,
-    info  = 0x04,
-    warn  = 0x08,
-    error = 0x10,
+    enum class level_t : uint32_t
+    {
+        trace = 0x01,
+        debug = 0x02,
+        info = 0x04,
+        warn = 0x08,
+        error = 0x10,
 
 #ifdef DEBUG
     default_flags = trace | debug | info | warn | error
 #else
-    default_flags = trace         | info | warn | error
+        default_flags = trace | info | warn | error
 #endif
-  };
+    };
 
-  enum class options_t : uint32_t
-  {
-    print_time                = 0x01,
-    print_processor_number    = 0x02,
-    print_function_name       = 0x04,
+    enum class options_t : uint32_t
+    {
+        print_time = 0x01,
+        print_processor_number = 0x02,
+        print_function_name = 0x04,
 
-    default_flags = print_time | print_processor_number /*| print_function_name*/,
-  };
+        default_flags = print_time | print_processor_number /*| print_function_name*/,
+    };
 
-  hvpp_enum_operators(level_t);
-  hvpp_enum_operators(options_t);
+    hvpp_enum_operators(level_t);
 
-  namespace detail
-  {
+    hvpp_enum_operators(options_t);
+
+    namespace detail
+    {
+        auto initialize() noexcept -> error_code_t;
+        void destroy() noexcept;
+
+        void vprint(level_t level, const char* function, const char* format, va_list args) noexcept;
+        void vprint_trace(level_t level, const char* function, const char* format, va_list args) noexcept;
+    }
+
     auto initialize() noexcept -> error_code_t;
     void destroy() noexcept;
 
-    void vprint(level_t level, const char* function, const char* format, va_list args) noexcept;
-    void vprint_trace(level_t level, const char* function, const char* format, va_list args) noexcept;
-  }
+    auto get_options() noexcept -> options_t;
+    void set_options(options_t options) noexcept;
+    bool test_options(options_t option) noexcept;
 
-  auto initialize() noexcept -> error_code_t;
-  void destroy() noexcept;
+    auto get_level() noexcept -> level_t;
+    void set_level(level_t level) noexcept;
+    bool test_level(level_t level) noexcept;
 
-  auto get_options() noexcept -> options_t;
-  void set_options(options_t options) noexcept;
-  bool test_options(options_t option) noexcept;
-
-  auto get_level() noexcept -> level_t;
-  void set_level(level_t level) noexcept;
-  bool test_level(level_t level) noexcept;
-
-  void print(level_t level, const char* function, const char* format, ...) noexcept;
+    void print(level_t level, const char* function, const char* format, ...) noexcept;
 }

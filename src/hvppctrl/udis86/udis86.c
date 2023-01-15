@@ -34,25 +34,25 @@
 # endif
 #endif /* !__UD_STANDALONE__ */
 
-static void ud_inp_init(struct ud *u);
+static void ud_inp_init(struct ud* u);
 
 /* =============================================================================
  * ud_init
  *    Initializes ud_t object.
  * =============================================================================
  */
-extern void 
+extern void
 ud_init(struct ud* u)
 {
-  memset((void*)u, 0, sizeof(struct ud));
-  ud_set_mode(u, 16);
-  u->mnemonic = UD_Iinvalid;
-  ud_set_pc(u, 0);
+    memset((void*)u, 0, sizeof(struct ud));
+    ud_set_mode(u, 16);
+    u->mnemonic = UD_Iinvalid;
+    ud_set_pc(u, 0);
 #ifndef __UD_STANDALONE__
-  ud_set_input_file(u, stdin);
+    ud_set_input_file(u, stdin);
 #endif /* __UD_STANDALONE__ */
 
-  ud_set_asm_buffer(u, u->asm_buf_int, sizeof(u->asm_buf_int));
+    ud_set_asm_buffer(u, u->asm_buf_int, sizeof(u->asm_buf_int));
 }
 
 
@@ -65,17 +65,20 @@ ud_init(struct ud* u)
 extern unsigned int
 ud_disassemble(struct ud* u)
 {
-  int len;
-  if (u->inp_end) {
-    return 0;
-  }
-  if ((len = ud_decode(u)) > 0) {
-    if (u->translator != NULL) {
-      u->asm_buf[0] = '\0';
-      u->translator(u);
+    int len;
+    if (u->inp_end)
+    {
+        return 0;
     }
-  }
-  return len;
+    if ((len = ud_decode(u)) > 0)
+    {
+        if (u->translator != NULL)
+        {
+            u->asm_buf[0] = '\0';
+            u->translator(u);
+        }
+    }
+    return len;
 }
 
 
@@ -83,64 +86,68 @@ ud_disassemble(struct ud* u)
  * ud_set_mode() - Set Disassemly Mode.
  * =============================================================================
  */
-extern void 
+extern void
 ud_set_mode(struct ud* u, uint8_t m)
 {
-  switch(m) {
-  case 16:
-  case 32:
-  case 64: u->dis_mode = m ; return;
-  default: u->dis_mode = 16; return;
-  }
+    switch (m)
+    {
+    case 16:
+    case 32:
+    case 64: u->dis_mode = m;
+        return;
+    default: u->dis_mode = 16;
+        return;
+    }
 }
 
 /* =============================================================================
  * ud_set_vendor() - Set vendor.
  * =============================================================================
  */
-extern void 
+extern void
 ud_set_vendor(struct ud* u, unsigned v)
 {
-  switch(v) {
-  case UD_VENDOR_INTEL:
-    u->vendor = v;
-    break;
-  case UD_VENDOR_ANY:
-    u->vendor = v;
-    break;
-  default:
-    u->vendor = UD_VENDOR_AMD;
-  }
+    switch (v)
+    {
+    case UD_VENDOR_INTEL:
+        u->vendor = v;
+        break;
+    case UD_VENDOR_ANY:
+        u->vendor = v;
+        break;
+    default:
+        u->vendor = UD_VENDOR_AMD;
+    }
 }
 
 /* =============================================================================
  * ud_set_pc() - Sets code origin. 
  * =============================================================================
  */
-extern void 
+extern void
 ud_set_pc(struct ud* u, uint64_t o)
 {
-  u->pc = o;
+    u->pc = o;
 }
 
 /* =============================================================================
  * ud_set_syntax() - Sets the output syntax.
  * =============================================================================
  */
-extern void 
+extern void
 ud_set_syntax(struct ud* u, void (*t)(struct ud*))
 {
-  u->translator = t;
+    u->translator = t;
 }
 
 /* =============================================================================
  * ud_insn() - returns the disassembled instruction
  * =============================================================================
  */
-const char* 
-ud_insn_asm(const struct ud* u) 
+const char*
+ud_insn_asm(const struct ud* u)
 {
-  return u->asm_buf;
+    return u->asm_buf;
 }
 
 /* =============================================================================
@@ -148,9 +155,9 @@ ud_insn_asm(const struct ud* u)
  * =============================================================================
  */
 uint64_t
-ud_insn_off(const struct ud* u) 
+ud_insn_off(const struct ud* u)
 {
-  return u->insn_offset;
+    return u->insn_offset;
 }
 
 
@@ -158,23 +165,25 @@ ud_insn_off(const struct ud* u)
  * ud_insn_hex() - Returns hex form of disassembled instruction.
  * =============================================================================
  */
-const char* 
-ud_insn_hex(struct ud* u) 
+const char*
+ud_insn_hex(struct ud* u)
 {
-  u->insn_hexcode[0] = 0;
-  if (!u->error) {
-    unsigned int i;
-    const unsigned char *src_ptr = ud_insn_ptr(u);
-    char* src_hex;
-    src_hex = (char*) u->insn_hexcode;
-    /* for each byte used to decode instruction */
-    for (i = 0; i < ud_insn_len(u) && i < sizeof(u->insn_hexcode) / 2;
-         ++i, ++src_ptr) {
-      sprintf_s(src_hex, 64, "%02x", *src_ptr & 0xFF);
-      src_hex += 2;
+    u->insn_hexcode[0] = 0;
+    if (!u->error)
+    {
+        unsigned int i;
+        const unsigned char* src_ptr = ud_insn_ptr(u);
+        char* src_hex;
+        src_hex = (char*)u->insn_hexcode;
+        /* for each byte used to decode instruction */
+        for (i = 0; i < ud_insn_len(u) && i < sizeof(u->insn_hexcode) / 2;
+             ++i, ++src_ptr)
+        {
+            sprintf_s(src_hex, 64, "%02x", *src_ptr & 0xFF);
+            src_hex += 2;
+        }
     }
-  }
-  return u->insn_hexcode;
+    return u->insn_hexcode;
 }
 
 
@@ -184,11 +193,10 @@ ud_insn_hex(struct ud* u)
  *    disassembled.
  * =============================================================================
  */
-extern const uint8_t* 
-ud_insn_ptr(const struct ud* u) 
+extern const uint8_t*
+ud_insn_ptr(const struct ud* u)
 {
-  return (u->inp_buf == NULL) ? 
-            u->inp_sess : u->inp_buf + (u->inp_buf_index - u->inp_ctr);
+    return (u->inp_buf == NULL) ? u->inp_sess : u->inp_buf + (u->inp_buf_index - u->inp_ctr);
 }
 
 
@@ -197,10 +205,10 @@ ud_insn_ptr(const struct ud* u)
  *    Returns the count of bytes disassembled.
  * =============================================================================
  */
-extern unsigned int 
-ud_insn_len(const struct ud* u) 
+extern unsigned int
+ud_insn_len(const struct ud* u)
 {
-  return (unsigned int)u->inp_ctr;
+    return (unsigned int)u->inp_ctr;
 }
 
 
@@ -212,13 +220,16 @@ ud_insn_len(const struct ud* u)
  * =============================================================================
  */
 const struct ud_operand*
-ud_insn_opr(const struct ud *u, unsigned int n)
+ud_insn_opr(const struct ud* u, unsigned int n)
 {
-  if (n > 2 || u->operand[n].type == UD_NONE) {
-    return NULL; 
-  } else {
-    return &u->operand[n];
-  }
+    if (n > 2 || u->operand[n].type == UD_NONE)
+    {
+        return NULL;
+    }
+    else
+    {
+        return &u->operand[n];
+    }
 }
 
 
@@ -228,11 +239,11 @@ ud_insn_opr(const struct ud *u, unsigned int n)
  * =============================================================================
  */
 int
-ud_opr_is_sreg(const struct ud_operand *opr)
+ud_opr_is_sreg(const struct ud_operand* opr)
 {
-  return opr->type == UD_OP_REG && 
-         opr->base >= UD_R_ES   &&
-         opr->base <= UD_R_GS;
+    return opr->type == UD_OP_REG &&
+        opr->base >= UD_R_ES &&
+        opr->base <= UD_R_GS;
 }
 
 
@@ -243,11 +254,11 @@ ud_opr_is_sreg(const struct ud_operand *opr)
  * =============================================================================
  */
 int
-ud_opr_is_gpr(const struct ud_operand *opr)
+ud_opr_is_gpr(const struct ud_operand* opr)
 {
-  return opr->type == UD_OP_REG && 
-         opr->base >= UD_R_AL   &&
-         opr->base <= UD_R_R15;
+    return opr->type == UD_OP_REG &&
+        opr->base >= UD_R_AL &&
+        opr->base <= UD_R_R15;
 }
 
 
@@ -258,15 +269,15 @@ ud_opr_is_gpr(const struct ud_operand *opr)
  * =============================================================================
  */
 void
-ud_set_user_opaque_data(struct ud * u, void* opaque)
+ud_set_user_opaque_data(struct ud* u, void* opaque)
 {
-  u->user_opaque_data = opaque;
+    u->user_opaque_data = opaque;
 }
 
 void*
-ud_get_user_opaque_data(const struct ud *u)
+ud_get_user_opaque_data(const struct ud* u)
 {
-  return u->user_opaque_data;
+    return u->user_opaque_data;
 }
 
 
@@ -277,14 +288,17 @@ ud_get_user_opaque_data(const struct ud *u)
  * =============================================================================
  */
 void
-ud_set_asm_buffer(struct ud *u, char *buf, size_t size)
+ud_set_asm_buffer(struct ud* u, char* buf, size_t size)
 {
-  if (buf == NULL) {
-    ud_set_asm_buffer(u, u->asm_buf_int, sizeof(u->asm_buf_int));
-  } else {
-    u->asm_buf = buf;
-    u->asm_buf_size = size;
-  }
+    if (buf == NULL)
+    {
+        ud_set_asm_buffer(u, u->asm_buf_int, sizeof(u->asm_buf_int));
+    }
+    else
+    {
+        u->asm_buf = buf;
+        u->asm_buf_size = size;
+    }
 }
 
 
@@ -304,11 +318,11 @@ ud_set_asm_buffer(struct ud *u, char *buf, size_t size)
  * =============================================================================
  */
 void
-ud_set_sym_resolver(struct ud *u, const char* (*resolver)(struct ud*, 
+ud_set_sym_resolver(struct ud* u, const char* (*resolver)(struct ud*,
                                                           uint64_t addr,
-                                                          int64_t *offset))
+                                                          int64_t* offset))
 {
-  u->sym_resolver = resolver;
+    u->sym_resolver = resolver;
 }
 
 
@@ -318,9 +332,9 @@ ud_set_sym_resolver(struct ud *u, const char* (*resolver)(struct ud*,
  * =============================================================================
  */
 enum ud_mnemonic_code
-ud_insn_mnemonic(const struct ud *u)
+ud_insn_mnemonic(const struct ud* u)
 {
-  return u->mnemonic;
+    return u->mnemonic;
 }
 
 
@@ -333,11 +347,14 @@ ud_insn_mnemonic(const struct ud *u)
 const char*
 ud_lookup_mnemonic(enum ud_mnemonic_code c)
 {
-  if (c < UD_MAX_MNEMONIC_CODE) {
-    return ud_mnemonics_str[c];
-  } else {
-    return NULL;
-  }
+    if (c < UD_MAX_MNEMONIC_CODE)
+    {
+        return ud_mnemonics_str[c];
+    }
+    else
+    {
+        return NULL;
+    }
 }
 
 
@@ -346,16 +363,16 @@ ud_lookup_mnemonic(enum ud_mnemonic_code c)
  *    Initializes the input system.
  */
 static void
-ud_inp_init(struct ud *u)
+ud_inp_init(struct ud* u)
 {
-  u->inp_hook      = NULL;
-  u->inp_buf       = NULL;
-  u->inp_buf_size  = 0;
-  u->inp_buf_index = 0;
-  u->inp_curr      = 0;
-  u->inp_ctr       = 0;
-  u->inp_end       = 0;
-  UD_NON_STANDALONE(u->inp_file = NULL);
+    u->inp_hook = NULL;
+    u->inp_buf = NULL;
+    u->inp_buf_size = 0;
+    u->inp_buf_index = 0;
+    u->inp_curr = 0;
+    u->inp_ctr = 0;
+    u->inp_end = 0;
+    UD_NON_STANDALONE(u->inp_file = NULL);
 }
 
 
@@ -364,11 +381,11 @@ ud_inp_init(struct ud *u)
  *    Sets input hook.
  * =============================================================================
  */
-void 
+void
 ud_set_input_hook(register struct ud* u, int (*hook)(struct ud*))
 {
-  ud_inp_init(u);
-  u->inp_hook = hook;
+    ud_inp_init(u);
+    u->inp_hook = hook;
 }
 
 /* =============================================================================
@@ -376,13 +393,13 @@ ud_set_input_hook(register struct ud* u, int (*hook)(struct ud*))
  *    Set buffer as input.
  * =============================================================================
  */
-void 
+void
 ud_set_input_buffer(register struct ud* u, const uint8_t* buf, size_t len)
 {
-  ud_inp_init(u);
-  u->inp_buf = buf;
-  u->inp_buf_size = len;
-  u->inp_buf_index = 0;
+    ud_inp_init(u);
+    u->inp_buf = buf;
+    u->inp_buf_size = len;
+    u->inp_buf_index = 0;
 }
 
 
@@ -392,18 +409,18 @@ ud_set_input_buffer(register struct ud* u, const uint8_t* buf, size_t len)
  *    Set FILE as input.
  * =============================================================================
  */
-static int 
+static int
 inp_file_hook(struct ud* u)
 {
-  return fgetc(u->inp_file);
+    return fgetc(u->inp_file);
 }
 
-void 
+void
 ud_set_input_file(register struct ud* u, FILE* f)
 {
-  ud_inp_init(u);
-  u->inp_hook = inp_file_hook;
-  u->inp_file = f;
+    ud_inp_init(u);
+    u->inp_hook = inp_file_hook;
+    u->inp_file = f;
 }
 #endif /* __UD_STANDALONE__ */
 
@@ -413,33 +430,40 @@ ud_set_input_file(register struct ud* u, FILE* f)
  *    Skip n input bytes.
  * ============================================================================
  */
-void 
+void
 ud_input_skip(struct ud* u, size_t n)
 {
-  if (u->inp_end) {
-    return;
-  }
-  if (u->inp_buf == NULL) {
-    while (n--) {
-      int c = u->inp_hook(u);
-      if (c == UD_EOI) {
-        goto eoi;
-      }
+    if (u->inp_end)
+    {
+        return;
     }
-    return;
-  } else {
-    if (n > u->inp_buf_size ||
-        u->inp_buf_index > u->inp_buf_size - n) {
-      u->inp_buf_index = u->inp_buf_size; 
-      goto eoi;
+    if (u->inp_buf == NULL)
+    {
+        while (n--)
+        {
+            int c = u->inp_hook(u);
+            if (c == UD_EOI)
+            {
+                goto eoi;
+            }
+        }
+        return;
     }
-    u->inp_buf_index += n; 
-    return;
-  }
+    else
+    {
+        if (n > u->inp_buf_size ||
+            u->inp_buf_index > u->inp_buf_size - n)
+        {
+            u->inp_buf_index = u->inp_buf_size;
+            goto eoi;
+        }
+        u->inp_buf_index += n;
+        return;
+    }
 eoi:
-  u->inp_end = 1;
-  UDERR(u, "cannot skip, eoi received\b");
-  return;
+    u->inp_end = 1;
+    UDERR(u, "cannot skip, eoi received\b");
+    return;
 }
 
 
@@ -449,9 +473,9 @@ eoi:
  * =============================================================================
  */
 int
-ud_input_end(const struct ud *u)
+ud_input_end(const struct ud* u)
 {
-  return u->inp_end;
+    return u->inp_end;
 }
 
 /* vim:set ts=2 sw=2 expandtab */

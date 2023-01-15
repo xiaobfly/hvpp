@@ -25,7 +25,7 @@
 
 class spinlock
 {
-  public:
+public:
     //
     // Manually fine-tuned.
     //
@@ -33,33 +33,33 @@ class spinlock
 
     bool try_lock() noexcept
     {
-      return !lock_.test_and_set(std::memory_order_acquire);
+        return !lock_.test_and_set(std::memory_order_acquire);
     }
 
     void lock() noexcept
     {
-      unsigned wait = 1;
+        unsigned wait = 1;
 
-      while (!try_lock())
-      {
-        for (unsigned i = 0; i < wait; ++i)
+        while (!try_lock())
         {
-          ia32_asm_pause();
-        }
+            for (unsigned i = 0; i < wait; ++i)
+            {
+                ia32_asm_pause();
+            }
 
-        //
-        // Don't call "pause" too many times. If the wait becomes too big,
-        // clamp it to the max_wait.
-        //
-        wait = std::min(wait * 2, max_wait);
-      }
+            //
+            // Don't call "pause" too many times. If the wait becomes too big,
+            // clamp it to the max_wait.
+            //
+            wait = std::min(wait * 2, max_wait);
+        }
     }
 
     void unlock() noexcept
     {
-      lock_.clear(std::memory_order_release);
+        lock_.clear(std::memory_order_release);
     }
 
-  private:
+private:
     std::atomic_flag lock_ = ATOMIC_FLAG_INIT;
 };

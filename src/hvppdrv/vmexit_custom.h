@@ -10,9 +10,9 @@ using namespace ia32;
 using namespace hvpp;
 
 class vmexit_custom_handler
-  : public vmexit_passthrough_handler
+    : public vmexit_passthrough_handler
 {
-  public:
+public:
     using base_type = vmexit_passthrough_handler;
 
     auto setup(vcpu_t& vp) noexcept -> error_code_t override;
@@ -22,13 +22,13 @@ class vmexit_custom_handler
     void handle_execute_vmcall(vcpu_t& vp) noexcept override;
     void handle_ept_violation(vcpu_t& vp) noexcept override;
 
-  private:
+private:
     struct per_vcpu_data
     {
-      ept_t ept;
+        ept_t ept;
 
-      pa_t page_read;
-      pa_t page_exec;
+        pa_t page_read;
+        pa_t page_exec;
     };
 
     auto user_data(vcpu_t& vp) noexcept -> per_vcpu_data&;

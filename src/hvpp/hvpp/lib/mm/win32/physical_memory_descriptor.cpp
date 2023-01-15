@@ -6,25 +6,26 @@ using namespace ia32;
 
 namespace mm::detail
 {
-  void check_physical_memory(physical_memory_range* range_list, int range_list_size, int& count) noexcept
-  {
-    auto physical_memory_ranges = MmGetPhysicalMemoryRanges();
-
-    count = 0;
-
-    do
+    void check_physical_memory(physical_memory_range* range_list, int range_list_size, int& count) noexcept
     {
-      pa_t   address = physical_memory_ranges[count].BaseAddress.QuadPart;
-      size_t size    = physical_memory_ranges[count].NumberOfBytes.QuadPart;
+        auto physical_memory_ranges = MmGetPhysicalMemoryRanges();
 
-      if (!address && !size)
-      {
-        break;
-      }
+        count = 0;
 
-      range_list[count] = physical_memory_range(address, address + size);
-    } while (++count < range_list_size);
+        do
+        {
+            pa_t address = physical_memory_ranges[count].BaseAddress.QuadPart;
+            size_t size = physical_memory_ranges[count].NumberOfBytes.QuadPart;
 
-    ExFreePool(physical_memory_ranges);
-  }
+            if (!address && !size)
+            {
+                break;
+            }
+
+            range_list[count] = physical_memory_range(address, address + size);
+        }
+        while (++count < range_list_size);
+
+        ExFreePool(physical_memory_ranges);
+    }
 }

@@ -74,13 +74,13 @@ extern const char* ud_insn_hex(struct ud*);
 
 extern unsigned int ud_insn_len(const struct ud* u);
 
-extern const struct ud_operand* ud_insn_opr(const struct ud *u, unsigned int n);
+extern const struct ud_operand* ud_insn_opr(const struct ud* u, unsigned int n);
 
-extern int ud_opr_is_sreg(const struct ud_operand *opr);
+extern int ud_opr_is_sreg(const struct ud_operand* opr);
 
-extern int ud_opr_is_gpr(const struct ud_operand *opr);
+extern int ud_opr_is_gpr(const struct ud_operand* opr);
 
-extern enum ud_mnemonic_code ud_insn_mnemonic(const struct ud *u);
+extern enum ud_mnemonic_code ud_insn_mnemonic(const struct ud* u);
 
 extern const char* ud_lookup_mnemonic(enum ud_mnemonic_code c);
 
@@ -90,12 +90,12 @@ extern void* ud_get_user_opaque_data(const struct ud*);
 
 extern uint64_t ud_insn_sext_imm(const struct ud*, const struct ud_operand*);
 
-extern void ud_set_asm_buffer(struct ud *u, char *buf, size_t size);
+extern void ud_set_asm_buffer(struct ud* u, char* buf, size_t size);
 
-extern void ud_set_sym_resolver(struct ud *u, 
-                                const char* (*resolver)(struct ud*, 
+extern void ud_set_sym_resolver(struct ud* u,
+                                const char* (*resolver)(struct ud*,
                                                         uint64_t addr,
-                                                        int64_t *offset));
+                                                        int64_t* offset));
 
 /* ========================================================================== */
 

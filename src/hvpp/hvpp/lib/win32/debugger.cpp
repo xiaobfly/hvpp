@@ -4,8 +4,8 @@
 
 namespace debugger::detail
 {
-  bool is_enabled() noexcept
-  {
-    return KD_DEBUGGER_ENABLED;
-  }
+    bool is_enabled() noexcept
+    {
+        return KD_DEBUGGER_ENABLED;
+    }
 }

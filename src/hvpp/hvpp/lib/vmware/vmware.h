@@ -38,12 +38,12 @@
 extern "C"
 int
 ia32_asm_io_with_context(
-  ia32::vmx::exit_qualification_io_instruction_t exit_qualification,
-  ia32::context_t& context
-  ) noexcept;
+    ia32::vmx::exit_qualification_io_instruction_t exit_qualification,
+    ia32::context_t& context
+) noexcept;
 
 bool
 try_decode_io_instruction(
-  const ia32::context_t& ctx,
-  ia32::vmx::exit_qualification_io_instruction_t& exit_qualification
-  ) noexcept;
+    const ia32::context_t& ctx,
+    ia32::vmx::exit_qualification_io_instruction_t& exit_qualification
+) noexcept;

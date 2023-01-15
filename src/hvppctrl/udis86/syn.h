@@ -39,12 +39,12 @@ uint64_t ud_syn_rel_target(struct ud*, struct ud_operand*);
 int ud_asmprintf(struct ud *u, const char *fmt, ...)
     __attribute__ ((format (printf, 2, 3)));
 #else
-int ud_asmprintf(struct ud *u, const char *fmt, ...);
+int ud_asmprintf(struct ud* u, const char* fmt, ...);
 #endif
 
-void ud_syn_print_addr(struct ud *u, uint64_t addr);
-void ud_syn_print_imm(struct ud* u, const struct ud_operand *op);
-void ud_syn_print_mem_disp(struct ud* u, const struct ud_operand *, int sign);
+void ud_syn_print_addr(struct ud* u, uint64_t addr);
+void ud_syn_print_imm(struct ud* u, const struct ud_operand* op);
+void ud_syn_print_mem_disp(struct ud* u, const struct ud_operand*, int sign);
 
 #endif /* UD_SYN_H */
 

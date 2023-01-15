@@ -6,8 +6,8 @@
 
 namespace hvpp::hypervisor
 {
-  auto start(vmexit_handler& handler) noexcept -> error_code_t;
-  void stop() noexcept;
+    auto start(vmexit_handler& handler) noexcept -> error_code_t;
+    void stop() noexcept;
 
-  bool is_running() noexcept;
+    bool is_running() noexcept;
 }
