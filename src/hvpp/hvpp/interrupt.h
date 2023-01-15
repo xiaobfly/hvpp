@@ -104,32 +104,32 @@ namespace interrupt
     // Helpful when injecting events.
     //
 
-    static constexpr auto nmi =
+    static auto nmi =
       interrupt_t {
         vmx::interrupt_type::nmi,
         exception_vector::nmi_interrupt
       };
 
-    static constexpr auto debug =
+    static auto debug =
       interrupt_t {
         vmx::interrupt_type::hardware_exception,
         exception_vector::debug
       };
 
-    static constexpr auto invalid_opcode =
+    static auto invalid_opcode =
       interrupt_t {
         vmx::interrupt_type::hardware_exception,
         exception_vector::invalid_opcode
       };
 
-    static constexpr auto general_protection =
+    static auto general_protection =
       interrupt_t {
         vmx::interrupt_type::hardware_exception,
         exception_vector::general_protection,
         exception_error_code_t{}
       };
 
-    static constexpr auto page_fault =
+    static auto page_fault =
       interrupt_t {
         vmx::interrupt_type::hardware_exception,
         exception_vector::page_fault,
